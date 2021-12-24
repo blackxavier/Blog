@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blog_app.models import PostModel, CategoryModel
+from blog_app.models import PostModel, CategoryModel, CommentModel
 
 
 @admin.register(PostModel)
@@ -65,3 +65,8 @@ class PostModelAdmin(admin.ModelAdmin):
 @admin.register(CategoryModel)
 class PostModelAdmin(admin.ModelAdmin):
     list_display = ("category_name",)
+
+
+@admin.register(CommentModel)
+class CommentModelAdmin(admin.ModelAdmin):
+    list_display = ("id", "date_created", "post")
