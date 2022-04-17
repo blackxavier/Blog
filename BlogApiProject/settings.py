@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     "blog_app.apps.BlogAppConfig",
     "users.apps.UsersConfig",
     "taggit",
+    "rest_framework.authtoken",
+    "rest_framework",
+    "rest_framework_simplejwt",
 ]
 
 MIDDLEWARE = [

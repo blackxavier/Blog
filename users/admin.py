@@ -10,8 +10,16 @@ class UserAdminConfig(UserAdmin):
         "first_name",
     )
     list_filter = ("email", "username", "first_name", "is_active", "is_staff")
-    ordering = ("-date_created",)
-    list_display = ("email", "username", "first_name", "is_active", "is_staff")
+    ordering = ("-date_joined",)
+    list_display = (
+        "email",
+        "username",
+        "first_name",
+        "last_name",
+        "is_active",
+        "is_staff",
+        "identifier",
+    )
     fieldsets = (
         (
             "User Information",
@@ -20,6 +28,7 @@ class UserAdminConfig(UserAdmin):
                     "email",
                     "username",
                     "first_name",
+                    "last_name",
                 )
             },
         ),
