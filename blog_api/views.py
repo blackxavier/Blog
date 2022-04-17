@@ -46,8 +46,4 @@ class CommentCreateReadView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(post_id=self.request.id)
 
-    # def get_serializer_class(self):
-    #     if self.action in ("list", "retrieve"):
-    #         return ReadCommentModelSerializer
-    #     else:
-    #         return WriteCommentSerializer
+   
