@@ -1,5 +1,6 @@
 from django.contrib import admin
-from blog_app.models import PostModel, CategoryModel, CommentModel
+
+from blog_app.models import CategoryModel, CommentModel, PostModel
 
 
 @admin.register(PostModel)

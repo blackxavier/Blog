@@ -1,19 +1,15 @@
-from rest_framework import status, views, permissions
-from rest_framework.response import Response
-from users.serializers import (
-    RegistrationSerializer,
-    AuthTokenSerializer,
-    ChangePasswordSerializer,
-    ReadUserProfileSerializer,
-    WriteUserSerializer,
-)
-from rest_framework.authtoken.models import Token
-from django.db import transaction
-from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth import get_user_model, logout
-from rest_framework.generics import UpdateAPIView
+from django.db import transaction
+from rest_framework import permissions, status, views
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import UpdateAPIView
+from rest_framework.response import Response
 
+from users.serializers import (AuthTokenSerializer, ChangePasswordSerializer,
+                               ReadUserProfileSerializer,
+                               RegistrationSerializer, WriteUserSerializer)
 
 User = get_user_model()
 

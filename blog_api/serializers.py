@@ -1,13 +1,23 @@
-from blog_app.models import CommentModel, PostModel, CategoryModel
+from django.db import transaction
+from django.template.defaultfilters import slugify
 from rest_framework import serializers
+from taggit.serializers import TaggitSerializer, TagListSerializerField
+
+from blog_app.models import (CategoryModel, CommentModel, PostModel,
+                             blog_options)
 from users.models import User
-from taggit.serializers import TagListSerializerField, TaggitSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "username", "first_name", "last_name")
+        fields = ("email", "username", "first_name", "last_name")
+
+
+class ReadCommentModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentModel
+        fields = ["id", "comment_text", "date_created"]
 
 
 class CategoryModelSerializer(serializers.Serializer):
@@ -25,28 +35,49 @@ class CategoryModelSerializer(serializers.Serializer):
         return instance
 
 
-class WritePostModelSerializer(TaggitSerializer, serializers.ModelSerializer):
-    pass
+class PostWriteModelSerializer(TaggitSerializer, serializers.ModelSerializer):
+    class Meta:
+        model = PostModel
+        fields = ["title", "excerpt", "content", "status"]
 
 
-class PostModelSerializer(TaggitSerializer, serializers.ModelSerializer):
-    category = CategoryModelSerializer()
+class PostsReadSerializer(TaggitSerializer, serializers.ModelSerializer):
+
+    # category = CategoryModelSerializer()
     author = UserSerializer()
+    # tags = TagListSerializerField()
+
+    class Meta:
+        model = PostModel
+        fields = ["title", "excerpt", "slug", "author", "published_date"]
+
+
+class CommentInPostDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentModel
+        fields = ["comment", "date_created"]
+
+
+class PostDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
+    category = serializers.SlugRelatedField(read_only=True, slug_field="category_name")
+    comments = CommentInPostDetailSerializer(many=True)
+    author = serializers.SlugRelatedField(read_only=True, slug_field="email")
+
     tags = TagListSerializerField()
 
     class Meta:
         model = PostModel
         fields = [
-            "id",
             "title",
             "excerpt",
-            "content",
             "slug",
-            "published_date",
             "author",
-            "category",
+            "published_date",
+            "content",
             "status",
+            "category",
             "tags",
+            "comments",
         ]
 
 
@@ -60,3 +91,14 @@ class WriteCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentModel
         fields = ["comment_text"]
+
+
+class PublishPostSerializer(serializers.Serializer):
+    status = serializers.ChoiceField(choices=blog_options, default="draft")
+
+    def update(self, instance, validated_data):
+
+        instance.status = validated_data.get("status", instance.status)
+
+        instance.save(update_fields=["status"])
+        return instance

@@ -1,8 +1,7 @@
-from rest_framework import serializers, status
-from django.contrib.auth import get_user_model
-from django.contrib.auth import authenticate
-from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import authenticate, get_user_model
 from django.db import transaction
+from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers, status
 
 User = get_user_model()
 
