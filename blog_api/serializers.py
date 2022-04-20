@@ -3,8 +3,7 @@ from django.template.defaultfilters import slugify
 from rest_framework import serializers
 from taggit.serializers import TaggitSerializer, TagListSerializerField
 
-from blog_app.models import (CategoryModel, CommentModel, PostModel,
-                             blog_options)
+from blog_app.models import CategoryModel, CommentModel, PostModel, blog_options
 from users.models import User
 
 
@@ -41,11 +40,9 @@ class PostWriteModelSerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = ["title", "excerpt", "content", "status"]
 
 
-class PostsReadSerializer(TaggitSerializer, serializers.ModelSerializer):
+class PostsReadSerializer(serializers.ModelSerializer):
 
-    # category = CategoryModelSerializer()
     author = UserSerializer()
-    # tags = TagListSerializerField()
 
     class Meta:
         model = PostModel
@@ -93,7 +90,7 @@ class WriteCommentSerializer(serializers.ModelSerializer):
         fields = ["comment_text"]
 
 
-class PublishPostSerializer(serializers.Serializer):
+class StatusChangePostSerializer(serializers.Serializer):
     status = serializers.ChoiceField(choices=blog_options, default="draft")
 
     def update(self, instance, validated_data):

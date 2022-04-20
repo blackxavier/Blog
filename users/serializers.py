@@ -47,6 +47,7 @@ class ReadUserProfileSerializer(serializers.ModelSerializer):
             "date_joined",
             "is_active",
         ]
+        read_only = fields
 
 
 class WriteUserSerializer(serializers.ModelSerializer):

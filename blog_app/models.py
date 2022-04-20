@@ -85,6 +85,9 @@ class CommentModel(models.Model):
 
 
 def create_slug(instance, new_slug=None):
+    """
+    Create and validate slug duplication
+    """
     slug = slugify(instance.title)
     if new_slug is not None:
         slug = new_slug
