@@ -9,6 +9,7 @@ from blog_api.views import (
     PostListView,
     PostRetrieveView,
     StatusChangePostView,
+    ListTagsView,
 )
 
 app_name = "blog_api"
@@ -31,5 +32,6 @@ urlpatterns = [
         CommentCreateListReadView.as_view(),
         name="comment-list-create",
     ),
+    path("tags/", ListTagsView.as_view(), name="tag"),
 ]
 urlpatterns += router.urls

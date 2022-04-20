@@ -2,7 +2,7 @@ from django.db import transaction
 from django.template.defaultfilters import slugify
 from rest_framework import serializers
 from taggit.serializers import TaggitSerializer, TagListSerializerField
-
+from taggit.models import Tag
 from blog_app.models import CategoryModel, CommentModel, PostModel, blog_options
 from users.models import User
 
@@ -101,5 +101,7 @@ class StatusChangePostSerializer(serializers.Serializer):
         return instance
 
 
-class TagListSerializer(TaggitSerializer):
-    tags = TagListSerializerField()
+class TagListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ["name", "slug"]

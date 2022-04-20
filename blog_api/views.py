@@ -11,8 +11,10 @@ from blog_api.serializers import (
     StatusChangePostSerializer,
     ReadCommentModelSerializer,
     WriteCommentSerializer,
+    TagListSerializer,
 )
 from blog_app.models import CategoryModel, CommentModel, PostModel
+from taggit.models import Tag
 
 
 class PostListView(generics.ListAPIView):
@@ -118,3 +120,9 @@ class AllPostDrafts(generics.ListAPIView):
     def get_queryset(self):
         draftedpost = PostModel.draftedpost.filter(author=self.request.user)
         return draftedpost
+
+
+class ListTagsView(generics.ListAPIView):
+    serializer_class = TagListSerializer
+    permissions_classes = [IsAuthenticated]
+    queryset = Tag.objects.all().order_by("name")
