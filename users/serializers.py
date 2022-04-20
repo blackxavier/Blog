@@ -18,6 +18,22 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = ["email", "password", "username", "confirm_password"]
         extra_kwargs = {"password": {"write_only": True}}
 
+    def validate_email(self, value):
+        qs = User.objects.filter(email=value)
+        if qs:
+            raise serializers.ValidationError(
+                {"email": "Email already exists"}, code="authorization"
+            )
+        return value
+
+    def validate_username(self, value):
+        qs = User.objects.filter(username=value)
+        if qs:
+            raise serializers.ValidationError(
+                {"username": "Username already exists"}, code="authorization"
+            )
+        return value
+
     def save(self):
         account = User(
             email=self.validated_data["email"], username=self.validated_data["username"]
@@ -48,6 +64,28 @@ class ReadUserProfileSerializer(serializers.ModelSerializer):
             "is_active",
         ]
         read_only = fields
+
+
+class WriteUniqueUserDetails(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["email", "username"]
+
+    def validate_email(self, value):
+        qs = User.objects.filter(email=value)
+        if qs:
+            raise serializers.ValidationError(
+                {"email": "Email already exists"}, code="authorization"
+            )
+        return value
+
+    def validate_username(self, value):
+        qs = User.objects.filter(username=value)
+        if qs:
+            raise serializers.ValidationError(
+                {"username": "Username already exists"}, code="authorization"
+            )
+        return value
 
 
 class WriteUserSerializer(serializers.ModelSerializer):

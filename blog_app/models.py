@@ -7,12 +7,13 @@ from django.utils import timezone
 from taggit.managers import TaggableManager
 
 from blog_app.utils import get_random_string
+from django.utils.translation import gettext_lazy as _
 
 user = get_user_model()
 
 
 class CategoryModel(models.Model):
-    category_name = models.CharField(max_length=200, unique=True)
+    category_name = models.CharField(_("Category name"), max_length=200, unique=True)
     date_created = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -42,9 +43,9 @@ class PostModel(models.Model):
     category = models.ForeignKey(
         CategoryModel, on_delete=models.PROTECT, default=1, related_name="related_posts"
     )
-    title = models.CharField(max_length=250)
-    excerpt = models.TextField(null=True)
-    content = models.TextField()
+    title = models.CharField(_("Post title"), max_length=250)
+    excerpt = models.TextField(_("Excerpt"))
+    content = models.TextField(_("Content"))
     slug = models.SlugField(max_length=250, null=False, unique=True)
     published_date = models.DateTimeField(default=timezone.now)
     date_updated = models.DateTimeField(auto_now=True)
@@ -52,7 +53,9 @@ class PostModel(models.Model):
         user, on_delete=models.CASCADE, related_name="blog_posts"
     )
 
-    status = models.CharField(max_length=10, choices=blog_options, default="draft")
+    status = models.CharField(
+        _("Post status"), max_length=10, choices=blog_options, default="draft"
+    )
 
     objects = models.Manager()
     publishedpost = PublishedPost()
@@ -70,11 +73,12 @@ class PostModel(models.Model):
 
 
 class CommentModel(models.Model):
-    comment = models.TextField()
+    comment_text = models.TextField(_("comment text"))
     date_created = models.DateTimeField(default=timezone.now)
     post = models.ForeignKey(
         PostModel, on_delete=models.CASCADE, related_name="comments"
     )
+    is_active = models.BooleanField(_("active"), default=True)
 
     class Meta:
 

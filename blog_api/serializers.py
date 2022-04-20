@@ -52,7 +52,7 @@ class PostsReadSerializer(serializers.ModelSerializer):
 class CommentInPostDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentModel
-        fields = ["comment", "date_created"]
+        fields = ["comment_text", "date_created"]
 
 
 class PostDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
@@ -99,3 +99,7 @@ class StatusChangePostSerializer(serializers.Serializer):
 
         instance.save(update_fields=["status"])
         return instance
+
+
+class TagListSerializer(TaggitSerializer):
+    tags = TagListSerializerField()
