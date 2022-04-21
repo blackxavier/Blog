@@ -40,6 +40,12 @@ class PostModel(models.Model):
         def get_queryset(self):
             return super().get_queryset().filter(status="draft")
 
+    class BookmarkedPost(models.Manager):
+        """Custom model manager for drafted posts"""
+
+        def get_queryset(self):
+            return super().get_queryset().filter(is_bookmarked=True)
+
     category = models.ForeignKey(
         CategoryModel, on_delete=models.PROTECT, default=1, related_name="related_posts"
     )
@@ -56,10 +62,12 @@ class PostModel(models.Model):
     status = models.CharField(
         _("Post status"), max_length=10, choices=blog_options, default="draft"
     )
+    is_bookmarked = models.BooleanField(_("Bookmark this post"), default=False)
 
     objects = models.Manager()
     publishedpost = PublishedPost()
     draftedpost = DraftedPost()
+    bookmarkedpost = BookmarkedPost()
     tags = TaggableManager()
 
     class Meta:

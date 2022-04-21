@@ -46,7 +46,14 @@ class PostsReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PostModel
-        fields = ["title", "excerpt", "slug", "author", "published_date"]
+        fields = [
+            "title",
+            "excerpt",
+            "slug",
+            "author",
+            "published_date",
+            "is_bookmarked",
+        ]
 
 
 class CommentInPostDetailSerializer(serializers.ModelSerializer):
@@ -105,3 +112,19 @@ class TagListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ["name", "slug"]
+
+
+class BookmarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostModel
+        fields = ["is_bookmarked"]
+
+        @transaction.atomic()
+        def update(self, instance, validated_data):
+
+            instance.is_bookmarked = validated_data.get(
+                "is_bookmarked", instance.is_bookmarked
+            )
+
+            instance.save(update_fields=["is_bookmarked"])
+            return instance

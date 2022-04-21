@@ -10,6 +10,8 @@ from blog_api.views import (
     PostRetrieveView,
     StatusChangePostView,
     ListTagsView,
+    BookmarkPostView,
+    AllBookmarkPostByUserView,
 )
 
 app_name = "blog_api"
@@ -20,10 +22,19 @@ router.register(r"categories", CategoryViewset, basename="category")
 urlpatterns = [
     path("posts/", PostListView.as_view(), name="post_list"),
     path("users/me/drafted-posts/", AllPostDrafts.as_view(), name="post_drafted"),
-    path("posts/<slug:slug>/", PostRetrieveView.as_view(), name="post_detail"),
     path(
         "posts/<slug:slug>/publish/",
         StatusChangePostView.as_view(),
+        name="post_publish",
+    ),
+    path(
+        "posts/<slug:slug>/bookmark/",
+        BookmarkPostView.as_view(),
+        name="post_publish",
+    ),
+    path(
+        "posts/bookmarks/",
+        AllBookmarkPostByUserView.as_view(),
         name="post_publish",
     ),
     path("posts/create/", PostCreateView.as_view(), name="post_create"),
@@ -33,5 +44,6 @@ urlpatterns = [
         name="comment-list-create",
     ),
     path("tags/", ListTagsView.as_view(), name="tag"),
+    path("posts/<slug:slug>/", PostRetrieveView.as_view(), name="post_detail"),
 ]
 urlpatterns += router.urls

@@ -34,6 +34,7 @@ class PostModelAdmin(admin.ModelAdmin):
                 "fields": (
                     "published_date",
                     "status",
+                    "is_bookmarked"
                 )
             },
         ),

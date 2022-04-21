@@ -12,6 +12,7 @@ from blog_api.serializers import (
     ReadCommentModelSerializer,
     WriteCommentSerializer,
     TagListSerializer,
+    BookmarkSerializer,
 )
 from blog_app.models import CategoryModel, CommentModel, PostModel
 from taggit.models import Tag
@@ -23,6 +24,17 @@ class PostListView(generics.ListAPIView):
     permission_classes = [AllowAny]
     queryset = PostModel.publishedpost.all()
     serializer_class = PostsReadSerializer
+
+
+class AllBookmarkPostByUserView(generics.ListAPIView):
+    """performs GET operation on post resource"""
+
+    permission_classes = [IsAuthenticated]
+
+    serializer_class = PostsReadSerializer
+
+    def get_queryset(self):
+        return PostModel.bookmarkedpost.filter(author=self.request.user)
 
 
 class PostRetrieveView(generics.RetrieveUpdateDestroyAPIView):
@@ -107,6 +119,17 @@ class StatusChangePostView(generics.UpdateAPIView):
 
     permission_classes = [AuthorAllStaffAllButEditOrReadOnly]
     serializer_class = StatusChangePostSerializer
+    queryset = PostModel.objects.all()
+    lookup_field = "slug"
+
+
+class BookmarkPostView(generics.UpdateAPIView):
+    """
+    Handles bookmark change
+    """
+
+    permission_classes = [AuthorAllStaffAllButEditOrReadOnly]
+    serializer_class = BookmarkSerializer
     queryset = PostModel.objects.all()
     lookup_field = "slug"
 
